@@ -1,13 +1,12 @@
-# inserir_consultar_patrimonio.py
+# atualiza.py
 
-import sys
 import json
+import sys
 from patrimonio_crud import PatrimonioCRUD
 
 # Instancia a classe de acesso ao banco de dados
 crud = PatrimonioCRUD(uri="bolt://localhost:7687", user="neo4j", password="#neo4jcn*")
 
-# --- FUNÇÃO PARA ATUALIZAR UM PATRIMÔNIO A PARTIR DE UM JSON ---
 def atualizar_patrimonio_via_json(caminho_json: str):
     try:
         with open(caminho_json, 'r', encoding='utf-8') as f:
@@ -26,3 +25,27 @@ def atualizar_patrimonio_via_json(caminho_json: str):
 
     except Exception as e:
         print(f"Erro ao ler ou atualizar a partir do JSON: {e}")
+
+# Execução via terminal
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Uso: python atualiza.py <caminho_para_arquivo_json>")
+    else:
+        atualizar_patrimonio_via_json(sys.argv[1])
+
+    crud.close()
+
+# Como utilizar: crie um arquivo: atualizacao_pc001.json
+# {
+#   "patrimonio_id": "PC001",
+#   "local": "Sala de Reunião 3",
+#   "setor": "TI",
+#   "gestor": "João da Silva",
+#   "subsetor": "Infraestrutura",
+#   "usuario_login": "jsilva",
+#   "usuario_nome": "João da Silva",
+#   "locadora": "Locadora XYZ"
+# }
+
+# python atualiza.py ./data/atualizacao_pc001.json
+
