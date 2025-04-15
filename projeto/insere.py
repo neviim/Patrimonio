@@ -7,13 +7,13 @@ crud = PatrimonioCRUD(uri="bolt://localhost:7687", user="neo4j", password="#neo4
 
 # --- INSERÇÃO DE UM NOVO PATRIMÔNIO ---
 novo_patrimonio = {
-    "patrimonio_id": "P123456",
-    "setor": "TI",
-    "local": "Sala 101",
-    "gestor": "Carlos Silva",
-    "subsetor": "Infraestrutura",
-    "usuario_login": "jdoe",
-    "usuario_nome": "John Doe",
+    "patrimonio_id": "PC003",
+    "setor": "Administrativo",
+    "local": "Sala 102",
+    "gestor": "Maria Oliveira",
+    "subsetor": "",
+    "usuario_login": "ana.santos",
+    "usuario_nome": "Ana S. Santos",
     "locadora": "Locadora XYZ"
 }
 

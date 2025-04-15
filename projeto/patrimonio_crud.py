@@ -244,6 +244,27 @@ class PatrimonioCRUD:
             """, local=local)
             return [dict(record) for record in result]
 
+    def listar_patrimonios_por_gestor(self, gestor: str) -> List[Dict[str, Any]]:
+        with self.driver.session() as session:
+            result = session.run("""
+                MATCH (g:Gestor {nome: $gestor})-[:GERENCIA]->(s:Setor)-[:ALOCA]->(p:Patrimonio)
+                OPTIONAL MATCH (p)-[:ESTA_EM]->(l:Local)
+                OPTIONAL MATCH (u:Usuario)-[:USA]->(p)
+                RETURN p.id AS patrimonio_id, s.nome AS setor, l.nome AS local, g.nome AS gestor, u.login AS usuario_login, u.nome AS usuario_nome
+            """, gestor=gestor)
+            return [dict(record) for record in result]
+
+    def buscar_patrimonios_parcial_por_gestor(self, termo: str) -> List[Dict[str, Any]]:
+        with self.driver.session() as session:
+            result = session.run("""
+                MATCH (g:Gestor)-[:GERENCIA]->(s:Setor)-[:ALOCA]->(p:Patrimonio)
+                WHERE toLower(g.nome) CONTAINS toLower($termo)
+                OPTIONAL MATCH (p)-[:ESTA_EM]->(l:Local)
+                OPTIONAL MATCH (u:Usuario)-[:USA]->(p)
+                RETURN p.id AS patrimonio_id, s.nome AS setor, l.nome AS local, g.nome AS gestor, u.login AS usuario_login, u.nome AS usuario_nome
+            """, termo=termo)
+            return [dict(record) for record in result]
+
     def buscar_patrimonios_por_setor(self, setor: str) -> List[Dict]:
         """
         Busca patrimônios por setor.
@@ -421,6 +442,90 @@ class PatrimonioCRUD:
             print(f"Erro ao remover relação usuário-patrimônio: {e}")
             return False
     
+    def remover_gestor(self, nome_gestor: str) -> bool:
+        """
+        Remove um gestor e todas as suas relações no grafo.
+
+        Args:
+            nome_gestor (str): Nome exato do gestor a ser removido.
+
+        Returns:
+            bool: True se a operação for bem-sucedida, False se ocorrer erro.
+
+        Exemplo de uso:
+            crud = PatrimonioCRUD()
+            sucesso = crud.remover_gestor("João da Silva")
+            if sucesso:
+                print("Gestor removido com sucesso.")
+        """
+        try:
+            with self.driver.session() as session:
+                session.run("""
+                    MATCH (g:Gestor {nome: $nome})
+                    OPTIONAL MATCH (g)-[r]-()
+                    DELETE r, g
+                """, nome=nome_gestor)
+            return True
+        except Exception as e:
+            print(f"Erro ao remover gestor: {e}")
+            return False
+
+    def remover_local_se_sem_relacoes(self, nome_local: str) -> bool:
+        """
+        Remove um local apenas se ele não tiver nenhuma relação com outros nós.
+
+        Args:
+            nome_local (str): Nome exato do local a ser removido.
+
+        Returns:
+            bool: True se removido com sucesso, False caso contrário.
+
+        Exemplo de uso:
+            crud = PatrimonioCRUD()
+            sucesso = crud.remover_local_se_sem_relacoes("Sala de Reunião 3")
+            if sucesso:
+                print("Local removido com sucesso.")
+        """
+        try:
+            with self.driver.session() as session:
+                result = session.run("""
+                    MATCH (l:Local {nome: $nome})
+                    WHERE NOT (l)--()
+                    DELETE l
+                    RETURN count(l) AS removido
+                """, nome=nome_local)
+                record = result.single()
+                return record["removido"] > 0
+        except Exception as e:
+            print(f"Erro ao remover local: {e}")
+            return False
+
+    def remover_relacao_local_patrimonio(self, patrimonio_id: str) -> bool:
+        """
+        Remove a relação (:Patrimonio)-[:ESTA_EM]->(:Local) com base no ID do patrimônio.
+
+        Args:
+            patrimonio_id (str): ID do patrimônio que terá a relação com o local removida.
+
+        Returns:
+            bool: True se a relação foi removida com sucesso, False se ocorreu erro.
+
+        Exemplo de uso:
+            crud = PatrimonioCRUD()
+            sucesso = crud.remover_relacao_local_patrimonio("PC001")
+        """
+        try:
+            with self.driver.session() as session:
+                session.run("""
+                    MATCH (p:Patrimonio {id: $patrimonio})-[r:ESTA_EM]->(:Local)
+                    DELETE r
+                """, patrimonio=patrimonio_id)
+            return True
+        except Exception as e:
+            print(f"Erro ao remover relação do patrimônio com o local: {e}")
+            return False
+
+
     # UTILITIES
     
     def estatisticas(self) -> Dict[str, int]:
