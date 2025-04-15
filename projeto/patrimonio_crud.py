@@ -233,7 +233,17 @@ class PatrimonioCRUD:
             """, offset=offset, limit=limit)
             
             return [dict(record) for record in result]
-    
+
+    def listar_patrimonios_por_local(self, local: str) -> List[Dict[str, Any]]:
+        with self.driver.session() as session:
+            result = session.run("""
+                MATCH (p:Patrimonio)-[:ESTA_EM]->(l:Local {nome: $local})
+                OPTIONAL MATCH (s:Setor)-[:ALOCA]->(p)
+                OPTIONAL MATCH (u:Usuario)-[:USA]->(p)
+                RETURN p.id AS patrimonio_id, s.nome AS setor, l.nome AS local, u.login AS usuario_login, u.nome AS usuario_nome
+            """, local=local)
+            return [dict(record) for record in result]
+
     def buscar_patrimonios_por_setor(self, setor: str) -> List[Dict]:
         """
         Busca patrimônios por setor.
