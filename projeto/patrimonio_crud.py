@@ -258,7 +258,8 @@ class PatrimonioCRUD:
             result = session.run("""
                 MATCH (s:Setor {nome: $setor})-[:ALOCA]->(p:Patrimonio)
                 OPTIONAL MATCH (p)-[:ESTA_EM]->(l:Local)
-                RETURN p.id AS patrimonio_id, s.nome AS setor, l.nome AS local
+                OPTIONAL MATCH (u:Usuario)-[:USA]->(p)
+                RETURN p.id AS patrimonio_id, s.nome AS setor, l.nome AS local, u.login AS usuario_login, u.nome AS usuario_nome
             """, setor=setor)
             
             return [dict(record) for record in result]
