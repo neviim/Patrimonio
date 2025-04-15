@@ -35,17 +35,17 @@ if __name__ == "__main__":
 
     crud.close()
 
-# Como utilizar: crie um arquivo: atualizacao_pc001.json
+# Como utilizar: crie um arquivo: atualizacao_pc003.json
 # {
-#   "patrimonio_id": "PC001",
-#   "local": "Sala de Reunião 3",
-#   "setor": "TI",
-#   "gestor": "João da Silva",
-#   "subsetor": "Infraestrutura",
-#   "usuario_login": "jsilva",
-#   "usuario_nome": "João da Silva",
-#   "locadora": "Locadora XYZ"
+#     "patrimonio_id": "PC003",
+#     "local": "Sala 103",
+#     "setor": "Administrativo",
+#     "gestor": "Maria Oliveira",
+#     "subsetor": "Financeiro",
+#     "usuario_login": "ana.santos",
+#     "usuario_nome": "Ana S. Santos",
+#     "locadora": "TechRent"
 # }
 
-# python atualiza.py ./data/atualizacao_pc001.json
+# python atualiza_patrimonio.py ./data/atualizacao_pc003.json
 

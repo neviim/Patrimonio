@@ -1,7 +1,166 @@
+# Do projeto
 ./data/
 ./data/aipf-patrimonio.csv
+./projeto/__pycache__
+
 nota-descarte.md
 
 *.csv
+*.pyc
+.pyc
 
-__pycache__
+# Arquivos compilados e caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Extensões C
+*.so
+
+# Distribuição e empacotamento
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Logs de instalação
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Relatórios de testes e cobertura
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Traduções
+*.mo
+*.pot
+
+# Configurações específicas de frameworks
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Documentação Sphinx
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Notebooks Jupyter
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+pdm.lock
+.pdm.toml
+.pdm-python
+.pdm-build/
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# Ambientes virtuais
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+# Configurações de IDEs
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+.history
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope
+.ropeproject
+
+# mkdocs
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# pytype
+.pytype/
+
+# Cython
+cython_debug/
+
+# Ruff
+.ruff_cache/
+
+# Configuração do PyPI
+.pypirc
