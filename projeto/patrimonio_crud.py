@@ -500,29 +500,31 @@ class PatrimonioCRUD:
             print(f"Erro ao remover local: {e}")
             return False
 
-    def remover_relacao_local_patrimonio(self, patrimonio_id: str) -> bool:
+    def remover_relacao_local_patrimonio(self, patrimonio_id: str, nome_local: str) -> bool:
         """
-        Remove a relação (:Patrimonio)-[:ESTA_EM]->(:Local) com base no ID do patrimônio.
+        Remove a relação (:Patrimonio)-[:ESTA_EM]->(:Local) somente se ela existir.
 
         Args:
-            patrimonio_id (str): ID do patrimônio que terá a relação com o local removida.
+            patrimonio_id (str): ID do patrimônio.
+            nome_local (str): Nome do local.
 
         Returns:
-            bool: True se a relação foi removida com sucesso, False se ocorreu erro.
+            bool: True se a relação foi removida com sucesso, False se não existir ou erro ocorrer.
 
-        Exemplo de uso:
-            crud = PatrimonioCRUD()
-            sucesso = crud.remover_relacao_local_patrimonio("PC001")
+        Exemplo:
+            sucesso = crud.remover_relacao_local_patrimonio("PC001", "Sala 101")
         """
         try:
             with self.driver.session() as session:
-                session.run("""
-                    MATCH (p:Patrimonio {id: $patrimonio})-[r:ESTA_EM]->(:Local)
+                result = session.run("""
+                    MATCH (p:Patrimonio {id: $patrimonio})-[r:ESTA_EM]->(l:Local {nome: $local})
                     DELETE r
-                """, patrimonio=patrimonio_id)
-            return True
+                    RETURN count(r) AS removido
+                """, patrimonio=patrimonio_id, local=nome_local)
+                record = result.single()
+                return record["removido"] > 0
         except Exception as e:
-            print(f"Erro ao remover relação do patrimônio com o local: {e}")
+            print(f"Erro ao remover relação patrimônio-local: {e}")
             return False
 
 
