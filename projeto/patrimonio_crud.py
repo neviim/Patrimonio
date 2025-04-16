@@ -527,6 +527,35 @@ class PatrimonioCRUD:
             print(f"Erro ao remover relação patrimônio-local: {e}")
             return False
 
+    def remover_subsetor_por_id(self, subsetor_id: str) -> bool:
+        """
+        Remove um SubSetor com base no campo 'id' e todas as suas relações.
+
+        Args:
+            subsetor_id (str): ID único do SubSetor.
+
+        Returns:
+            bool: True se removido com sucesso, False caso contrário.
+
+        Exemplo de uso:
+            crud = PatrimonioCRUD()
+            sucesso = crud.remover_subsetor_por_id("SS102")
+            if sucesso:
+                print("SubSetor removido com sucesso.")
+        """
+        try:
+            with self.driver.session() as session:
+                session.run("""
+                    MATCH (ss:SubSetor {id: $id})
+                    OPTIONAL MATCH (ss)-[r]-()
+                    DELETE r, ss
+                """, id=subsetor_id)
+
+            return True
+        except Exception as e:
+            print(f"Erro ao remover SubSetor: {e}")
+            return False
+        
 
     # UTILITIES
     
