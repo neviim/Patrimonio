@@ -2,6 +2,7 @@
 ./data/
 ./data/aipf-patrimonio.csv
 ./projeto/__pycache__
+./data/aipf-patrimonio_restructured.csv
 
 nota-descarte.md
 
