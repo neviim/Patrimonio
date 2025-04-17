@@ -1,8 +1,9 @@
 # Do projeto
-./data/
+./data
 ./data/aipf-patrimonio.csv
-./projeto/__pycache__
 ./data/aipf-patrimonio_restructured.csv
+
+./projeto/__pycache__
 
 nota-descarte.md
 
